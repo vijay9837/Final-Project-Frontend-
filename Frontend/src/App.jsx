@@ -1,9 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/SubPages/Dashboard";
 import Profile from "./pages/SubPages/SettingsPage/Profile";
@@ -20,6 +15,9 @@ import PlansAndPricing from "./pages/SubPages/SettingsPage/PlansAndPricing";
 import AddInstitute from "./Components/AddInstitute";
 import Subscription from "./pages/SubPages/Subscription";
 import CustomisePlan from "./pages/SubPages/SettingsPage/CustomisePlan";
+import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
+import ResetPasswordProtected from "./pages/protectedWrapper/ResetPasswordProtected";
 function App() {
   const theme = useSelector((state) => state.theme);
   const user = useSelector((state) => state.User);
@@ -34,6 +32,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route element={<ResetPasswordProtected />}>
+          <Route path="/reset-password/:email" element={<ResetPassword />} />
+        </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />}>

@@ -11,12 +11,7 @@ const Subscription = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_REACT_API}/institute/allInstitute`,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "true",
-          },
-        },
+        `${import.meta.env.VITE_REACT_API}institute/allInstitute`,
       );
 
       if (response.status === 200) {
@@ -39,7 +34,6 @@ const Subscription = () => {
 
   return (
     <div className="w-full h-full lg:p-6 p-2 flex flex-col gap-4 bg-slate-200 dark:bg-gray-900">
-      {/* Search */}
       <div className="relative">
         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
         <input

@@ -1,90 +1,156 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { toast, ToastContainer } from "react-toastify";
 import { logout, setUser } from "../redux/Slices/user";
+import { Mail, Lock } from "lucide-react";
+import DialogBox from "./DialogBox";
+import { motion } from "framer-motion";
 function Login() {
   const user = useSelector((state) => state.User);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [logging, setLogging] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   useEffect(() => {
     if (user.isAuthenticated) {
       navigate("/");
     }
-  }, [user.isAuthenticated]);
+  }, [user.isAuthenticated, navigate]);
+
   const formSubmit = async (e) => {
     e.preventDefault();
+    setLogging(true);
+
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
+
     try {
       const response = await axios.post(
-        "https://effie-uncandied-dumpily.ngrok-free.dev/Sadmin/login",
+        `${import.meta.env.VITE_REACT_API}Sadmin/login`,
         data,
       );
-      if (response) {
-        const responseData = response.data;
-        if (responseData.Success === true) {
-          console.log(responseData.data);
-          dispatch(setUser(responseData.data));
-          sessionStorage.setItem("admin", JSON.stringify(responseData.data));
-          toast.success(responseData.Message);
-          setTimeout(() => {
-            navigate("/");
-          }, 2000);
-        } else {
-          toast.error(responseData.Message);
-          dispatch(logout());
-        }
+
+      const responseData = response.data;
+      if (responseData.Success === true) {
+        dispatch(setUser(responseData.data));
+        sessionStorage.setItem("admin", JSON.stringify(responseData.data));
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        dispatch(logout());
+        setErrorMsg(responseData.message);
+        setOpenDialog(true);
       }
     } catch (error) {
-      toast.error(error)
+      setErrorMsg(error.response?.data?.message);
+      setOpenDialog(true);
     }
+    setLogging(false);
   };
-
+const popupVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+    y: 40,
+  },
+  show: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut",
+    },
+  },
+};
   return (
-    <div className="h-screen  min-w-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-      <div className="  sm:w-8/10 max-w-md bg-white dark:bg-gray-800 shadow-xl rounded-2xl lg:p-8 p-4 transition-colors duration-300">
-        <div className="lg:mb-8 mb-4">
-          <h2 className="lg:text-3xl text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-            Admin Login
+    <div className="h-screen w-full flex items-center justify-center bg-gradient-to-r from-slate-900 to-slate-700">
+      <motion.div
+      variants={popupVariants}
+        initial="hidden"
+        animate="show"
+        exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.3 } }}
+        className="w-[90%] max-w-md backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl rounded-3xl p-8"
+      >
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            <p className="text-indigo-400 font-semibold">Admin Login</p>
+          </div>
+
+          <h2
+            style={{ fontFamily: "Mozilla Text, sans-serif" }}
+            className="text-white text-3xl font-semibold"
+          >
+            Welcome Back
           </h2>
+
+          <p className="text-gray-400 text-sm mt-1">
+            Enter your credentials to continue
+          </p>
         </div>
-        <form onSubmit={formSubmit} className="lg:space-y-5 space-y-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Enter Admin Email
-            </label>
+
+        <form onSubmit={formSubmit} className="space-y-5">
+          <div className="relative">
+            <Mail size={18} className="absolute left-3 top-3 text-gray-400" />
+
             <input
               autoFocus
               type="email"
               name="email"
-              placeholder="Enter Your Email"
-              className="w-full px-4 py-2 border sm:text-sm border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              required
+              placeholder="Enter your email"
+              className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Password
-            </label>
+          <div className="relative">
+            <Lock size={18} className="absolute left-3 top-3 text-gray-400" />
+
             <input
-              name="password"
               type="password"
-              placeholder="****"
-              className="w-full px-4 py-2 border sm:text-sm border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              name="password"
+              required
+              placeholder="Enter password"
+              className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
+          </div>
+
+          <div className="flex justify-end">
+            <Link
+              className="text-sm text-indigo-400 hover:text-indigo-300"
+              to="/forgot-password"
+            >
+              Forgot password?
+            </Link>
           </div>
 
           <button
             type="submit"
-            className="w-full p-2 lg:py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 font-medium"
+            className="w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition shadow-lg shadow-indigo-600/30"
           >
-            Login
+            {logging ? (
+              <div className="flex justify-center items-center gap-3 text-gray-200">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Logging...
+              </div>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
-      </div>
-      <ToastContainer />
+      </motion.div>
+
+      <DialogBox
+        isOpen={openDialog}
+        onClose={() => setOpenDialog(false)}
+        title="Login Error"
+        message={errorMsg}
+      />
     </div>
   );
 }

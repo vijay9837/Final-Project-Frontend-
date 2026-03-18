@@ -7,9 +7,9 @@ import Employes from "../../Components/Dashboard/Employes";
 import Notifications from "../../Components/Dashboard/Notifications";
 const Dashboard = () => {
   return (
-    <div className="w-full h-320 flex flex-col items-center    bg-gray-100  dark:bg-gray-900">
+    <div className="w-full h-320 flex flex-col items-center    bg-gray-200  dark:bg-gray-900">
       <div className="w-full h-screen flex  flex-col lg:grid grid-cols-12 grid-rows-12 lg:gap-4 gap-2 lg:rounded-3xl p-2 lg:p-4">
-        <div className="lg:col-span-8 col-span-12 row-span-2 lg:rounded-2xl rounded bg-white dark:bg-gray-800 lg:order-1 flex items-center gap-2 justify-between shadow-lg p-2">
+        <div className="lg:col-span-8 col-span-12 row-span-2 lg:rounded-2xl rounded bg-gradient-to-r from-blue-600 to-violet-600 lg:order-1 flex items-center gap-2 justify-between shadow-lg p-2">
           <div className="flex-1 lg:rounded-2xl rounded flex py-2 items-center flex-col justify-center bg-orange-100 lg:border-b-4 border-b-2 border-orange-500 h-full w-full ">
             <p className="text-slate-700">
               <AnimatedCounter target={2345} />

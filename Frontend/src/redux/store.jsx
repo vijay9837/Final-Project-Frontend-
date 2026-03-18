@@ -5,6 +5,7 @@ import themeReducers from "./Slices/themeslice";
 import searchReducer from "./Slices/searchslice";
 import userReducer from "./Slices/user";
 import addInstituteReducer from "./Slices/addInstituteSlice";
+import authReducer from "./Slices/auth";
 export const store = configureStore({
   reducer: {
     toggle: toggleReducers,
@@ -13,5 +14,6 @@ export const store = configureStore({
     search: searchReducer,
     User: userReducer,
     addInstitute: addInstituteReducer,
+    auth: authReducer,
   },
 });

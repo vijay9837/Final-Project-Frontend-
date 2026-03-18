@@ -110,6 +110,7 @@ function Navbar() {
     },
   ]);
   const [notificationDropDown, setNotificationDropDown] = useState(false);
+  const [loggingOut, setIsloggingOut] = useState(false);
   const [isProfileDropdown, setIsProfileDrowdown] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state) => state.User);
@@ -124,8 +125,11 @@ function Navbar() {
     }
   };
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/admin/login");
+    setIsloggingOut(true);
+    setTimeout(() => {
+      dispatch(logout());
+      navigate("/admin/login");
+    }, 2000);
   };
 
   return (
@@ -165,8 +169,9 @@ function Navbar() {
               <AiOutlineSun className="lg:w-5 h-5" />
             </button>
             <button
-              onClick={() => {setNotificationDropDown(!notificationDropDown);
-                setIsProfileDrowdown(false)
+              onClick={() => {
+                setNotificationDropDown(!notificationDropDown);
+                setIsProfileDrowdown(false);
               }}
               className="relative  p-1 lg:p-2 m-0 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors "
             >
@@ -176,14 +181,14 @@ function Navbar() {
               </span>
               <div
                 className={`absolute top-10 -left-30 p-1 w-60 h-40 bg-white dark:bg-gray-800 
-  flex flex-col gap-2 rounded-lg border border-slate-200 dark:border-slate-700
-  transition-all duration-200 ease-in-out
-  ${
-    notificationDropDown
-      ? "opacity-100 translate-y-2 pointer-events-auto"
-      : "opacity-0 translate-y-0 pointer-events-none"
-  }
-  `}
+                            flex flex-col gap-2 rounded-lg border border-slate-200 dark:border-slate-700
+                            transition-all duration-200 ease-in-out
+                            ${
+                              notificationDropDown
+                                ? "opacity-100 translate-y-2 pointer-events-auto"
+                                : "opacity-0 translate-y-0 pointer-events-none"
+                            }
+                            `}
               >
                 <h2 className="flex items-center lg:font-bold lg:text-base text-sm   justify-between p-1 bg-white dark:bg-slate-800 w-full  ">
                   Notifications <RiMessage2Line className="text-sm" />
@@ -193,7 +198,7 @@ function Navbar() {
                     notification.map((noti) => {
                       return (
                         <li
-                        id={noti.body} 
+                          id={noti.body}
                           className=" dark:bg-slate-800 flex border-b py-1 px-2 border-slate-300 dark:border-slate-700  items-center justify-between "
                         >
                           <div className=" flex flex-col items-start ">
@@ -229,7 +234,7 @@ function Navbar() {
                 <FaAngleDown className="text-sm" />
               </div>
               <div
-                className={`absolute top-10 -left-40 w-60 h-40 bg-white dark:bg-gray-800 
+                className={`absolute top-10 -left-40 w-60 h-auto bg-white dark:bg-gray-800 
                               flex flex-col gap-2 p-2 rounded-lg border border-slate-200 dark:border-slate-700
                               transition-all duration-200 ease-in-out
                               ${
@@ -243,7 +248,14 @@ function Navbar() {
                   onClick={handleLogout}
                   className="text-red-600 p-1 duration-300 ease-in-out transition-colors list-none hover:bg-slate-100  dark:hover:bg-slate-400 rounded-sm"
                 >
-                  Logout
+                  {loggingOut ? (
+                    <div className="flex justify-center items-center gap-3 text-gray-200">
+                      <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
+                      Logging Out...
+                    </div>
+                  ) : (
+                    "Logout"
+                  )}
                 </li>
               </div>
             </div>

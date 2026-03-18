@@ -11,9 +11,9 @@ const PlansAndPricing = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_REACT_API}/plans/allPlans`,
-        { headers: { "ngrok-skip-browser-warning": "true" } }
+        `${import.meta.env.VITE_REACT_API}plans/allPlans`,
       );
+      console.log(response.data.plans)
       setPlans(response.data?.plans || []);
     } finally {
       setLoading(false);
@@ -25,7 +25,7 @@ const PlansAndPricing = () => {
   }, []);
 
   const getBestDiscount = (plan) => {
-    if (plan.actualPrice === 0) return null;
+    if (plan.price === 0) return null;
     return plan.discounts.reduce((best, d) =>
       d.discountPercent > (best?.discountPercent ?? 0) ? d : best, null
     );
@@ -81,12 +81,12 @@ const PlansAndPricing = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {plans.map((plan, i) => {
               const accent = planAccents[i % planAccents.length];
-              const isFree = plan.actualPrice === 0;
+              const isFree = plan.price === 0;
               const bestDiscount = getBestDiscount(plan);
               const hasDiscount = bestDiscount && bestDiscount.discountPercent > 0;
               const discountedPrice = hasDiscount
-                ? Math.round(plan.actualPrice * (1 - bestDiscount.discountPercent / 100))
-                : plan.actualPrice;
+                ? Math.round(plan.price * (1 - bestDiscount.discountPercent / 100))
+                : plan.price;
               const termLabel = getTermLabel(bestDiscount);
 
               return (
@@ -123,13 +123,13 @@ const PlansAndPricing = () => {
                       {isFree ? (
                         <>
                           <span className="text-4xl font-extrabold tracking-tight">Free</span>
-                          <p className="text-xs mt-2 text-gray-400 dark:text-gray-500 font-medium">Forever free</p>
+                          <p className="text-xs mt-2 text-gray-400 dark:text-gray-500 font-medium">For 1 Month</p>
                         </>
                       ) : (
                         <>
                           {hasDiscount && (
                             <p className="text-sm text-gray-400 dark:text-gray-500 line-through mb-1 font-medium">
-                              ₹{plan.actualPrice}<span className="text-xs">/mo</span>
+                              ₹{plan.price}<span className="text-xs">/mo</span>
                             </p>
                           )}
                           <div className="flex items-baseline gap-1">

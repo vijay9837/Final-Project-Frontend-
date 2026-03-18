@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 const storedAdmin = JSON.parse(sessionStorage.getItem("admin"));
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
     currentUser: storedAdmin ? storedAdmin : null,
-    isAuthenticated: true,
+    isAuthenticated: storedAdmin ? true : false,
   },
   reducers: {
     setUser: (state, action) => {

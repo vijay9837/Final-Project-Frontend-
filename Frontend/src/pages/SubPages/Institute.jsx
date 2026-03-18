@@ -16,16 +16,10 @@ const Institute = () => {
   const dispatch = useDispatch();
 
   const fecthInstitute = async () => {
-    const url =
-      "https://effie-uncandied-dumpily.ngrok-free.dev/institute/allInstitute";
+    const url = `${import.meta.env.VITE_REACT_API}institute/allInstitute`;
     try {
       setLoading(true);
-      const response = await axios(url, {
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-        },
-      });
-
+      const response = await axios(url);
       responseInstitute = response.data.institutes;
       console.log(responseInstitute);
       if (response.status === 200) {
@@ -58,9 +52,10 @@ const Institute = () => {
     const status = e.target.value;
     const id = e.target.id;
     console.log(e.target.value);
-    const url = `https://effie-uncandied-dumpily.ngrok-free.dev/institute/updateinstitute/status?id=${id}&status=${status}`;
-
-    const response = await axios.post(url);
+    const url = `${import.meta.env.VITE_REACT_API}institute/updateInstitute/${id}`;
+    console.log(url);
+    const response = await axios.put(url);
+    console.log(response);
     console.log(response.status);
     if (response.status === 200) {
       fecthInstitute();

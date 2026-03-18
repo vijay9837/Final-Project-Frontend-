@@ -29,7 +29,7 @@ const Notifications = () => {
   useEffect(() => {}, []);
   return (
     <div className="bg-white w-full dark:bg-gray-800 flex flex-col items-center gap-2  lg:h-full lg:max-h-full max-h-70  relative  lg:rounded-2xl rounded-lg lg:p-3 px-2 py-1 ">
-      <h2 className="flex items-center lg:font-bold lg:text-base text-lg rounded p-2  justify-between  bg-white dark:bg-slate-800 border dark:border-slate-700 dark:text-white w-full lg:gap-3 gap-2 ">
+      <h2 className="flex items-center lg:font-bold lg:text-base text-lg rounded p-2  justify-between  bg-white dark:bg-slate-800  dark:border-slate-700 dark:text-white w-full lg:gap-3 gap-2 ">
         Reccent Notifications <RiMessage2Line className="text-2xl" />
       </h2>
       <ul className=" w-full flex flex-col rounded overflow-y-scroll gap-1 demo h-full ">

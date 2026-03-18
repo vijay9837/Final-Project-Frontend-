@@ -5,13 +5,22 @@ import { closesidenav } from "../redux/Slices/toggleslice";
 import { LogOut, Settings, University, User2Icon } from "lucide-react";
 import { MdOutlineSupportAgent } from "react-icons/md";
 import { FaHandHoldingDollar } from "react-icons/fa6";
-
-import { NavLink } from "react-router-dom";
+import { logout } from "../redux/Slices/user";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Sidenav = () => {
   const issidenav = useSelector((state) => state.toggle);
+  const [loggingOut, setIsloggingOut] = useState(false);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    setIsloggingOut(true);
+    setTimeout(() => {
+      dispatch(logout());
+      navigate("/admin/login");
+    }, 2000);
+  };
   return (
     <aside
       id="sidebar"
@@ -145,6 +154,7 @@ const Sidenav = () => {
             </span>
           </NavLink>
           <button
+            onClick={handleLogout}
             className={`relative  w-full flex items-center lg:gap-3 gap-2 lg:p-2 p-1 rounded text-white/80  hover:bg-white/15 duration-300 ease-in-out transition-all  cursor-pointer ${({ isactive }) => (isactive ? "active" : "inactive")}`}
           >
             <div className="flex group items-center lg:gap-5 gap-3 overflow-hidden">
@@ -154,13 +164,16 @@ const Sidenav = () => {
               <span
                 className={`menu-text ${issidenav ? "visible " : "lg:hidden"} text-sm `}
               >
-                Logout
+                {loggingOut ? (
+                  <div className="flex justify-center items-center gap-3 text-gray-200">
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
+                    Logging Out...
+                  </div>
+                ) : (
+                  "Logout"
+                )}
               </span>
             </div>
-
-            <span className="tooltip absolute left-full ml-3 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">
-              Logout
-            </span>
           </button>
         </nav>
       </div>
